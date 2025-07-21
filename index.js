@@ -1,12 +1,12 @@
 import fs from "fs/promises"
 import path from "node:path"
-import { pluginName } from "./lib/Path.js"
+import { pluginName, __dirname } from "./lib/Path.js"
 let AppName = pluginName
 let loadedFilesCount = 0
 let loadedFilesCounterr = 0
 let apps
 // dg_lab_russian_roulette.is_TRSS =
-  // JSON.parse(await fs.readFile(`${process.cwd()}/package.json`)).name == "trss-yunzai"
+// JSON.parse(await fs.readFile(`${process.cwd()}/package.json`)).name == "trss-yunzai"
 const startTime = Date.now()
 logger.mark("------------------")
 logger.debug("\x1b[36mDG正在加载中...\x1b[0m")
@@ -29,14 +29,11 @@ logger.info(
 export { apps }
 
 async function appsOut({ AppsName }) {
-  const firstName = path.join("plugins", AppName)
-  const filepath = path.resolve(firstName, AppsName)
   let loadedFilesCount = 0
   let loadedFilesCounterr = 0
   const apps = {}
-
   try {
-    const jsFilePaths = await traverseDirectory(filepath)
+    const jsFilePaths = await traverseDirectory(__dirname)
     await Promise.all(
       jsFilePaths.map(async item => {
         try {
