@@ -64,6 +64,13 @@ export class Manage extends plugin {
         Bot.pickGroup(group_id).sendMsg(failMessage)
       }
     })
+    client.on("message", message => {
+      if (message.type == "msg" && message.message == "feedback-2") {
+        Bot.pickGroup(group_id).sendMsg([`[郊狼轮盘赌] ${user_id} 断开连接`, segment.at(user_id)])
+        client.断开连接()
+        Connections.delete(user_id)
+      }
+    })
   }
 
   async bind(e) {
@@ -86,7 +93,7 @@ export class Manage extends plugin {
       Connections.set(user_id, client)
       await client.startConnection()
 
-      await e.reply("设备绑定成功")
+      await e.reply("设备绑定成功,点击A通道的方块按钮可以断开连接")
     } catch (error) {
       logger.error(`[郊狼轮盘赌] ${user_id} 绑定失败`, error)
       await e.reply("设备绑定失败，请稍后重试")
