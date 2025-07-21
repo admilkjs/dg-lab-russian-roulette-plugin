@@ -1,5 +1,5 @@
 import plugin from "../../../lib/plugins/plugin.js"
-import { Connections } from "../lib/dg/Connections.js"
+import { Connections, 解析波形数据 } from "../lib/dg/Connections.js"
 /**
  * @type {Map<number, RouletteGame>}
  */
@@ -41,6 +41,7 @@ export class Roulette extends plugin {
    * 加入轮盘赌游戏
    */
   async joinGame(e) {
+    const player = Connections.get(e.user_id)
     if (!player) {
       return await e.reply("你还未绑定设备,请先发送#绑定郊狼")
     }
