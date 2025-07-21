@@ -1,4 +1,4 @@
-import { Connections, start } from "../lib/dg/Connections"
+import { Connections, start } from "../lib/dg/Connections.js"
 import plugin from "../../../lib/plugins/plugin.js"
 
 export class Manage extends plugin {
