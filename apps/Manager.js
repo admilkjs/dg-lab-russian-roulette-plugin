@@ -44,7 +44,10 @@ export class Manage extends plugin {
         { type: "image", file: "base64://" + buffer.toString("base64") },
       ])
     })
-
+    client.on("Connected", async ({ clientId, qq }) => {
+      logger.debug(`[郊狼轮盘赌] ${user_id} 设备已连接`)
+      await e.reply(`[郊狼轮盘赌] ${user_id} 设备已连接`)
+    })
     client.on("deviceConnected", async ({ clientId, targetId, A, B, A_S, B_S }) => {
       logger.debug(`[郊狼轮盘赌] ${user_id} 连接完成`)
       const message = `用户${client.name}的设备\n状态: 已连接\n设备状态: 设备已连接\nA通道强度大小: ${A}\nB通道强度大小: ${B}\nA通道强度大小上限: ${A_S}\nB通道强度大小上限: ${B_S}`
@@ -92,8 +95,6 @@ export class Manage extends plugin {
       this.setupClientListeners(client, user_id, group_id, e)
       Connections.set(user_id, client)
       await client.startConnection()
-
-      await e.reply("设备绑定成功,点击A通道的方块按钮可以断开连接")
     } catch (error) {
       logger.error(`[郊狼轮盘赌] ${user_id} 绑定失败`, error)
       await e.reply("设备绑定失败，请稍后重试")
