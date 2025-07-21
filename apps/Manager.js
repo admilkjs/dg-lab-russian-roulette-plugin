@@ -23,11 +23,14 @@ export class Manage extends plugin {
       Connections.delete(user_id)
       client.removeAllListeners()
       try {
+        Bot.pickGroup(group_id).sendMsg([
+          `[郊狼轮盘赌] ${user_id} 连接已关闭,正在重连...`,
+          segment.at(user_id),
+        ])
         let cli = await start("ws://111.229.158.178:9999/", user_id, clientId)
         Connections.set(user_id, cli)
         this.setupClientListeners(cli, user_id, group_id, e)
         await cli.startConnection()
-        Bot.pickGroup(group_id).sendMsg(`[郊狼轮盘赌] ${user_id} 连接已关闭,正在重连...`)
       } catch (error) {
         logger.error(`[郊狼轮盘赌] ${user_id} 重连失败`, error)
         Bot.pickGroup(group_id).sendMsg(`[郊狼轮盘赌] ${user_id} 重连失败`)
