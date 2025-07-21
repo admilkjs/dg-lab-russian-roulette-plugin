@@ -17,7 +17,7 @@ async function 一键监听(client) {
   })
   client.on("connectionFailed", ({ reason, error }) => {
     console.log("连接失败")
-    delete Connections.connections[client.name]
+    delete Connections.delete(client.name)
   })
   await client.startConnection()
 }
