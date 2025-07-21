@@ -41,7 +41,7 @@ export class Roulette extends plugin {
    * 加入轮盘赌游戏
    */
   async joinGame(e) {
-    if (!Connections.get(e.user_id)) {
+    if (!player) {
       return await e.reply("你还未绑定设备,请先发送#绑定郊狼")
     }
 
@@ -89,10 +89,10 @@ export class Roulette extends plugin {
    */
   async shoot(e) {
     const game = this.getOrCreateGame(e.group_id)
-
+    let player = Connections.get(e.user_id)
     // 如果玩家不在游戏中，自动加入
     if (!game.hasPlayer(e.user_id)) {
-      if (!Connections.get(e.user_id)) {
+      if (!player) {
         return await e.reply("你还未绑定设备,请先发送#绑定郊狼")
       }
       game.addPlayer(e.user_id)
@@ -112,7 +112,11 @@ export class Roulette extends plugin {
         await e.reply(
           `砰! 你被击中了！剩余子弹: ${result.remainingBullets}, 剩余真子弹: ${result.realBullets}`,
         )
-        Connections.get(e.user_id).发送波形消息(
+        const [o_a, o_b] = [player.A, player.B]
+        const [t_a, t_b] = [player.A_S, player.B_S]
+        player.设置通道强度("A", t_a)
+        player.设置通道强度("B", t_b)
+        player.发送波形消息(
           "A",
           JSON.stringify(
             解析波形数据([
@@ -168,6 +172,12 @@ export class Roulette extends plugin {
           ),
           2,
         )
+        async function sleep(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms))
+        }
+        await sleep(2000)
+        player.设置通道强度("A", o_a)
+        player.设置通道强度("B", o_b)
         if (result.gameEnded) {
           await e.reply("所有真子弹已用完，游戏结束！")
         }
