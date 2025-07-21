@@ -21,7 +21,7 @@ export class Manage extends plugin {
     client.on("close", async ({ clientId }) => {
       logger.debug(`[郊狼轮盘赌] ${user_id} 连接已关闭,开始重连`)
       Connections.delete(user_id)
-
+      client.removeAllListeners()
       try {
         let cli = await start("ws://111.229.158.178:9999/", user_id, clientId)
         Connections.set(user_id, cli)

@@ -29,11 +29,13 @@ logger.info(
 export { apps }
 
 async function appsOut({ AppsName }) {
+  const filepath = path.resolve(__dirname, AppsName)
   let loadedFilesCount = 0
   let loadedFilesCounterr = 0
   const apps = {}
+
   try {
-    const jsFilePaths = await traverseDirectory(__dirname)
+    const jsFilePaths = await traverseDirectory(filepath)
     await Promise.all(
       jsFilePaths.map(async item => {
         try {
