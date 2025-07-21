@@ -5,8 +5,8 @@ let AppName = pluginName
 let loadedFilesCount = 0
 let loadedFilesCounterr = 0
 let apps
-dg_lab_russian_roulette.is_TRSS =
-  JSON.parse(await fs.readFile(`${process.cwd()}/package.json`)).name == "trss-yunzai"
+// dg_lab_russian_roulette.is_TRSS =
+  // JSON.parse(await fs.readFile(`${process.cwd()}/package.json`)).name == "trss-yunzai"
 const startTime = Date.now()
 logger.mark("------------------")
 logger.debug("\x1b[36mDG正在加载中...\x1b[0m")
