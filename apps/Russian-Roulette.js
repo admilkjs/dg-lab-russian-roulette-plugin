@@ -42,9 +42,6 @@ export class Roulette extends plugin {
    */
   async joinGame(e) {
     const player = Connections.get(e.user_id)
-    if (!player) {
-      return await e.reply("你还未绑定设备,请先发送#绑定郊狼")
-    }
 
     const game = this.getOrCreateGame(e.group_id)
     const result = game.addPlayer(e.user_id)
@@ -93,9 +90,6 @@ export class Roulette extends plugin {
     let player = Connections.get(e.user_id)
     // 如果玩家不在游戏中，自动加入
     if (!game.hasPlayer(e.user_id)) {
-      if (!player) {
-        return await e.reply("你还未绑定设备,请先发送#绑定郊狼")
-      }
       game.addPlayer(e.user_id)
       await e.reply(`你已自动加入轮盘赌游戏,当前玩家数量: ${game.getPlayerCount()}`)
     }
@@ -113,74 +107,83 @@ export class Roulette extends plugin {
         await e.reply(
           `砰! 你被击中了！剩余子弹: ${result.remainingBullets}, 剩余真子弹: ${result.realBullets}`,
         )
-        const [o_a, o_b] = [player.A, player.B]
-        const [t_a, t_b] = [player.A_S, player.B_S]
-        player.设置通道强度("A", t_a)
-        player.设置通道强度("B", t_b)
-        player.发送波形消息(
-          "A",
-          JSON.stringify(
-            解析波形数据([
-              [
-                [10, 10, 10, 10],
-                [100, 100, 100, 100],
-              ],
-              [
-                [10, 10, 10, 10],
-                [100, 100, 100, 100],
-              ],
-              [
-                [10, 10, 10, 10],
-                [100, 100, 100, 100],
-              ],
-              [
-                [10, 10, 10, 10],
-                [0, 0, 0, 0],
-              ],
-              [
-                [10, 10, 10, 10],
-                [0, 0, 0, 0],
-              ],
-              [
-                [10, 10, 10, 10],
-                [0, 0, 0, 0],
-              ],
-              [
-                [10, 10, 10, 10],
-                [0, 0, 0, 0],
-              ],
-              [
-                [110, 110, 110, 110],
-                [100, 100, 100, 100],
-              ],
-              [
-                [110, 110, 110, 110],
-                [100, 100, 100, 100],
-              ],
-              [
-                [110, 110, 110, 110],
-                [100, 100, 100, 100],
-              ],
-              [
-                [110, 110, 110, 110],
-                [100, 100, 100, 100],
-              ],
-              [
-                [0, 0, 0, 0],
-                [0, 0, 0, 0],
-              ],
-            ]),
-          ),
-          2,
-        )
-        async function sleep(ms) {
-          return new Promise(resolve => setTimeout(resolve, ms))
-        }
-        await sleep(2000)
-        player.设置通道强度("A", o_a)
-        player.设置通道强度("B", o_b)
-        if (result.gameEnded) {
-          await e.reply("所有真子弹已用完，游戏结束！")
+        if(player) {
+          const [o_a, o_b] = [player.A, player.B]
+          const [t_a, t_b] = [player.A_S, player.B_S]
+          player.设置通道强度("A", t_a)
+          player.设置通道强度("B", t_b)
+          player.发送波形消息(
+            "A",
+            JSON.stringify(
+              解析波形数据([
+                [
+                  [10, 10, 10, 10],
+                  [100, 100, 100, 100],
+                ],
+                [
+                  [10, 10, 10, 10],
+                  [100, 100, 100, 100],
+                ],
+                [
+                  [10, 10, 10, 10],
+                  [100, 100, 100, 100],
+                ],
+                [
+                  [10, 10, 10, 10],
+                  [0, 0, 0, 0],
+                ],
+                [
+                  [10, 10, 10, 10],
+                  [0, 0, 0, 0],
+                ],
+                [
+                  [10, 10, 10, 10],
+                  [0, 0, 0, 0],
+                ],
+                [
+                  [10, 10, 10, 10],
+                  [0, 0, 0, 0],
+                ],
+                [
+                  [110, 110, 110, 110],
+                  [100, 100, 100, 100],
+                ],
+                [
+                  [110, 110, 110, 110],
+                  [100, 100, 100, 100],
+                ],
+                [
+                  [110, 110, 110, 110],
+                  [100, 100, 100, 100],
+                ],
+                [
+                  [110, 110, 110, 110],
+                  [100, 100, 100, 100],
+                ],
+                [
+                  [0, 0, 0, 0],
+                  [0, 0, 0, 0],
+                ],
+              ]),
+            ),
+            2,
+          )
+          async function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms))
+          }
+          await sleep(2000)
+          player.设置通道强度("A", o_a)
+          player.设置通道强度("B", o_b)
+          if (result.gameEnded) {
+            await e.reply("所有真子弹已用完，游戏结束！")
+          }
+        } else {
+          if (!e.group.is_admin && !e.group.is_owner) {
+            await e.reply("你当前未绑定郊狼，且机器人在该群中不是管理员，无法正常进行惩罚")
+            return false
+          }
+          await e.reply("你当前未绑定郊狼，已将惩罚改为禁言1分钟")
+          await e.group.muteMember(e.user_id, 60)
         }
         break
       case "SAFE":

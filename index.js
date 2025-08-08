@@ -24,6 +24,7 @@ logger.mark("------------------")
 logger.info(
   logger.yellow(
     `[${AppName}] 共加载了 ${loadedFilesCount} 个插件文件 ${loadedFilesCounterr} 个失败 耗时 ${endTime - startTime} 毫秒`,
+    `来自抖M天才威玩游戏的留言：别问我为啥要买郊狼，问就是因为爽（`
   ),
 )
 export { apps }
